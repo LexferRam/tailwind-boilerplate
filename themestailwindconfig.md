@@ -1,6 +1,6 @@
 # Agregar multiples temas con tailwind y variables de CSS.
 
-**Pasos para crear multiples Temas:**
+## **Pasos para crear multiples Temas:**
 
 proyect url: <https://play.tailwindcss.com/YelhilBeHb>
 
@@ -43,7 +43,7 @@ proyect url: <https://play.tailwindcss.com/YelhilBeHb>
 
 ```
 
-2. extendemos las clases de tailwind en el archivo tailwind.config.ts y agregamos las nuestras:
+2. extendemos las clases de tailwind en el archivo **tailwind.config.ts** y agregamos las nuestras:
 
 ```ts
 function withOpacity(variableName) {
@@ -110,3 +110,95 @@ module.exports = {
     </div>
   </div>
 ```
+
+---
+
+## **Theme configuration (tailwind.config.ts)**
+
+Customizing the default theme for your project.
+The theme section of your tailwind.config.js file is where you define your project’s color palette, type scale, fonts, breakpoints, border radius values, and more.
+
+**screen**
+
+Ejemplo: The screens key allows you to customize the responsive breakpoints in your project.
+
+```typescript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    }
+  }
+}
+```
+
+**Colors**
+
+By default, these colors are inherited by all color-related core plugins, like backgroundColor, borderColor, textColor, and others.
+
+```ts
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    colors: {
+      transparent: 'transparent',
+      black: '#000',
+      white: '#fff',
+      gray: {
+        100: '#f7fafc',
+        // ...
+        900: '#1a202c',
+      },
+
+      // ...
+    }
+  }
+}
+```
+
+**Extending the default theme**
+
+If you’d like to preserve the default values for a theme option but also add new values, add your extensions under the theme.extend key in your configuration file. Values under this key are merged with existing theme values and automatically become available as new classes that you can use.
+
+```ts
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: 'Oswald, ui-serif', // Adds a new `font-display` class
+      }
+    }
+  }
+}
+```
+
+**Overriding the default theme**
+
+To override an option in the default theme, add your overrides directly under the theme section of your tailwind.config.js:
+
+```ts 
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    // Replaces all of the default `opacity` values
+    opacity: {
+      '0': '0',
+      '20': '0.2',
+      '40': '0.4',
+      '60': '0.6',
+      '80': '0.8',
+      '100': '1',
+    }
+  }
+}
+```
+
+This will completely replace Tailwind’s default configuration for that key, so in the example above none of the default opacity utilities would be generated.
+
+Any keys you do not provide will be inherited from the default theme, so in the above example, the default theme configuration for things like colors, spacing, border-radius, background-position, etc. would be preserved.
