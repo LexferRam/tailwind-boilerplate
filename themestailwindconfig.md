@@ -248,3 +248,231 @@ function Badge({ className, variant, ...props }: BadgeProps) {
  
 export { Badge, badgeVariants }
 ```
+
+---
+
+## Creating High-Quality React Components: Best Practices for Reusability
+
+package and reuse functionality, implement the best practices when it comes to making reusable react components that allows us to type save the props of the component:
+Dependencies nedded:
+
+1. clsx                     (utility for constructing className strings conditionally)
+2. tailwind-merge           (Merge Tailwind CSS classes without style conflicts)
+3. class-variance-authority (to handle conditional tailwind clasess)
+
+* Create this util function:
+
+```ts
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+* Create the component:
+
+```ts
+import * as React from 'react'
+import Link from 'next/link'
+import { VariantProps, cva } from 'class-variance-authority'
+
+import { cn } from '@/lib/utils'
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-100 disabled:opacity-50 dark:focus:ring-slate-400 disabled:pointer-events-none dark:focus:ring-offset-slate-900 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800',
+  {
+    variants: {
+      variant: {
+        default:
+          'bg-slate-900 text-white hover:bg-slate-700 dark:bg-slate-50 dark:text-slate-900',
+        destructive:
+          'bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600',
+        outline:
+          'bg-transparent border border-slate-200 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-100',
+        subtle:
+          'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-100',
+        ghost:
+          'bg-transparent dark:bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-100 dark:hover:text-slate-100 data-[state=open]:bg-transparent dark:data-[state=open]:bg-transparent',
+        link: 'bg-transparent dark:bg-transparent underline-offset-4 hover:underline text-slate-900 dark:text-slate-300 hover:bg-transparent dark:hover:bg-transparent',
+      },
+      size: {
+        default: 'h-10 py-2 px-4',
+        sm: 'h-9 px-2 rounded-md',
+        lg: 'h-11 px-8 rounded-md',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  href?: string
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, children, href, variant, size, ...props }, ref) => {
+    if (href) {
+      return (
+        <Link
+          href={href}
+          className={cn(buttonVariants({ variant, size, className }))}
+        >
+          {children}
+        </Link>
+      )
+    }
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </button>
+    )
+  }
+)
+Button.displayName = 'Button'
+
+export { Button, buttonVariants }
+```
+
+* Button usage:
+
+```jsx
+<Button
+  variant="ghost"
+  className="-ml-4 text-base hover:bg-transparent focus:ring-0 md:hidden"
+>
+  <Icons.logo className="mr-2 h-4 w-4" />{' '}
+  <span className="font-bold">Menu</span>
+</Button>
+```
+
+**NOTA:** se usa forwardRef para pasar una ref a un componente de función (el prop ref para acceder al elemento DOM del componente).
+
+En general, se recomienda usar forwardRef en lugar de ref directamente en los siguientes casos:
+
+* Cuando se quiere pasar una ref a un componente de función. Los componentes de función no pueden aceptar el prop ref directamente. Para pasar una ref a un componente de función, se debe usar forwardRef.
+
+* Cuando se quiere pasar una ref a un componente personalizado. Los componentes personalizados no pueden aceptar el prop ref directamente. Para pasar una ref a un componente personalizado, se debe usar forwardRef.
+
+
+---
+
+## App structure (recommended by Shadcn)
+
+```markdown
+.
+├── app
+│   ├── layout.tsx
+│   └── page.tsx
+├── components
+│   ├── ui
+│   │   ├── alert-dialog.tsx
+│   │   ├── button.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   └── ...
+│   ├── main-nav.tsx
+│   ├── page-header.tsx
+│   └── ...
+├── lib
+│   └── utils.ts
+├── styles
+│   └── globals.css
+├── next.config.js
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+└── tsconfig.json
+
+```
+
+---
+
+## Tailwind CSS Animated
+
+playground: <https://www.tailwindcss-animated.com/configurator.html>
+
+* Install the plugin from npm:
+
+```cmd
+npm i tailwindcss-animated
+```
+
+* Then add the plugin to your tailwind.config.js file:
+
+```ts
+// tailwind.config.js
+module.exports = {
+  // ...
+  plugins: [
+    require('tailwindcss-animated')
+  ],
+}
+```
+
+* If you want to change some animations, extend your tailwind.config.js file:
+
+```ts
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      animationDelay: {
+        275: '275ms',
+        5000: '5s',
+      },
+      animationDuration: {
+        2000: '2s',
+        'long': '10s',
+        'very-long': '20s',
+      },
+    },
+  },
+  plugins: [
+    require('tailwindcss-animated')
+  ],
+}
+```
+
+---
+
+## Agrupado de Rutas en NextJS
+
+Al crear una carpeta envuelta en (parentesis), no solo podemos organizar mejor nuestros archivos, sino que también podríamos definir diferentes layout / loading / error para grupos de rutas que están al mismo nivel (o incluso tener layouts anidados). Ahora, nuestra carpeta components está colocada lo más cerca de donde es relevante posible. 
+
+---
+
+## Convention to name ReactJS components
+
+```javascript 
+
+// Component name pattern ([] = optional)
+// [Domain]Element[Modifier]
+
+// Good ✅
+// Domain: User, Element: Avatar, Modifier: Image
+export const UserAvatarImage = () => {}
+
+// Good ✅
+// Domain: Product, Element: List, Modifier: none
+export const ProductList = () => {}
+
+// Bad ❌
+export const User = () => {}
+
+```
+
+---
+## Theming strategy.
+
+Chadcn is a set of reusable components built with RadixUI and tailwind CSS, this is not a component library but rather a set of component that you can copy and paste in your projects as a starting point.
+
