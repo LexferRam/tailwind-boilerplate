@@ -27,8 +27,8 @@ const DropdownMenuComp = () => {
                 <DropdownMenuItem onClick={() => setTheme("light")}>
                     Light
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Dark
+                <DropdownMenuItem onClick={() => setTheme("test")}>
+                    test
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("system")}>
                     System
