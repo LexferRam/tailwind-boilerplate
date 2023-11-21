@@ -472,6 +472,82 @@ export const User = () => {}
 ```
 
 ---
+
+## Steps to Install Shadcn
+
+1. init Chadcn:
+
+```cmd
+npx shadcn-ui@latest init
+```
+
+2. ou will be asked a few questions to configure components.json.
+
+3. Fonts, 
+
+- Import the font in the root layout:
+
+```ts
+import "@/styles/globals.css"
+import { Inter as FontSans } from "next/font/google"
+ 
+import { cn } from "../@/lib/utils"
+ 
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+ 
+export default function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        ...
+      </body>
+    </html>
+  )
+}
+```
+
+ - Configure theme.extend.fontFamily in tailwind.config.js
+
+ ```ts 
+const { fontFamily } = require("tailwindcss/defaultTheme")
+ 
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
+    },
+  },
+}
+ ```
+
+4. You can now start adding components to your project. Example:
+
+```cmd
+npx shadcn-ui@latest add button
+```
+
+---
+
+## Font Optimization
+
+Docs: <https://nextjs.org/docs/pages/building-your-application/optimizing/fonts>
+Video: <https://www.youtube.com/watch?v=L8_98i_bMMA>
+
+---
 ## Theming strategy.
 
 Chadcn is a set of reusable components built with RadixUI and tailwind CSS, this is not a component library but rather a set of component that you can copy and paste in your projects as a starting point.
