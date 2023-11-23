@@ -1,7 +1,8 @@
 import { type Config } from "tailwindcss";
 import { shadcnPlugin } from "./shadcd-plugin";
+const withTM = require('next-transpile-modules')(["@material-tailwind/react"]); 
 
-export const shadcnPreset = {
+export const shadcnPreset = withTM({
     darkMode: ["class"],
     content: [],
     plugins: [
@@ -10,4 +11,4 @@ export const shadcnPreset = {
         require('tailwind-scrollbar-hide'),
         require('@tailwindcss/container-queries')
     ]
-} satisfies Config
+})
