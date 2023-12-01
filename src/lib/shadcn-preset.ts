@@ -1,4 +1,3 @@
-import { type Config } from "tailwindcss";
 import { shadcnPlugin } from "./shadcd-plugin";
 const withTM = require('next-transpile-modules')(["@material-tailwind/react"]); 
 

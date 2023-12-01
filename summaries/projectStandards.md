@@ -1,4 +1,4 @@
-# Estandares de los proyectos
+# Estandares de los proyectos definir para 
 
 ## Frameworks CSS:
     
@@ -27,6 +27,8 @@
 ## Estrategia de cache y peticiones http
 
     * Tanstack
+    * SWR
+    * Axios
 
 ## Optimizacion en renderizados
 
@@ -38,5 +40,9 @@
     * Lazy loading y code splitting
     * NextJS Image component
     * Listas virtualizadas (react-window)
+
+## Estructura de carpeta (sin y con Clean architecture)
+
+## Patrones y principios de diseño en componentes de ReactJS
 
 
